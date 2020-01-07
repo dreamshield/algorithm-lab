@@ -13,24 +13,71 @@ import java.util.NoSuchElementException;
 public class LinkList<T> implements Iterable<T> {
 
     private Node<T> head;
+    private int size = 0;
+
+    /**
+     * 查找指定key对应的索引，找到返回对应的索引，未找到抛出异常
+     * @param key 指定的key
+     * @return 索引
+     */
+    public int getIndexByKey(T key) {
+        if (isEmpty()) {
+            throw new NoSuchElementException("LinkList is empty");
+        }
+        int index = 0;
+        Node<T> current = head;
+        while (current != null) {
+            if (current.data.equals(key)) {
+                return index;
+            }
+            current = current.next;
+            index++;
+        }
+        throw new NoSuchElementException("The pointed key not exist");
+    }
+
+    /**
+     * 查找指定索引对应的值
+     *
+     * @param findIndex 指定的索引
+     * @return 查找结果
+     */
+    public T getDataByIndex(int findIndex) {
+        if (findIndex < 0 || findIndex >= size()) {
+            throw new IndexOutOfBoundsException("Index out of link list bounds");
+        }
+        Node<T> current = head;
+        int index = 0;
+        while (current != null) {
+            if (findIndex == index) {
+                return current.data;
+            }
+            current = current.next;
+            index++;
+        }
+        return null;
+    }
 
     /**
      * 在指定key的节点后面插入数据，注：仅在第一个匹配key处插入
      *
      * @param key  指定的key节点
      * @param data 待插入的数据
+     * @return 插入结果
      */
-    public void insertAtPointedKey(T key, T data) {
+    public boolean insertAtPointedKey(T key, T data) {
         Node<T> current = head;
         while (current != null) {
             if (current.data.equals(key)) {
                 Node<T> newNode = new Node<>(data);
                 newNode.next = current.next;
                 current.next = newNode;
-                break;
+                size++;
+                return true;
             }
             current = current.next;
         }
+        return false;
     }
 
     /**
@@ -40,7 +87,7 @@ public class LinkList<T> implements Iterable<T> {
      * @param key 待删除的key
      * @return 返回删除的节点
      */
-    public Node<T> deleteByKey(T key) {
+    public boolean deleteByKey(T key) {
         if (isEmpty()) {
             throw new NoSuchElementException("LinkList is empty");
         }
@@ -49,7 +96,7 @@ public class LinkList<T> implements Iterable<T> {
         while (!current.data.equals(key)) {
             // 未找到对应节点，直接返回
             if (current.next == null) {
-                return null;
+                return false;
             }
             previous = current;
             current = current.next;
@@ -60,24 +107,25 @@ public class LinkList<T> implements Iterable<T> {
         } else {
             previous.next = current.next;
         }
-        return current;
+        size--;
+        return true;
     }
 
     /**
-     * 查找指定的key，找到返回对应节点，未找到返回null
+     * 判断链表是否包含指定的key
      *
      * @param key 待查找的key
      * @return 查找结果
      */
-    public Node<T> findByKey(T key) {
+    public boolean containsKey(T key) {
         Node<T> current = head;
         while (current != null) {
             if (current.data.equals(key)) {
-                return current;
+                return true;
             }
             current = current.next;
         }
-        return null;
+        return false;
     }
 
     /**
@@ -90,11 +138,13 @@ public class LinkList<T> implements Iterable<T> {
         Node<T> newNode = new Node<>(data);
         if (isEmpty()) {
             head = newNode;
+        } else {
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
         }
-        while (current.next != null) {
-            current = current.next;
-        }
-        current.next = newNode;
+        size++;
     }
 
     /**
@@ -106,6 +156,7 @@ public class LinkList<T> implements Iterable<T> {
         Node<T> newNode = new Node<>(data);
         newNode.next = head;
         head = newNode;
+        size++;
     }
 
     /**
@@ -119,6 +170,7 @@ public class LinkList<T> implements Iterable<T> {
         }
         Node<T> temp = head;
         head = head.next;
+        size--;
         return temp.data;
     }
 
@@ -126,6 +178,7 @@ public class LinkList<T> implements Iterable<T> {
     public Iterator<T> iterator() {
         return new Iterator<T>() {
             Node<T> current = head;
+
             @Override
             public boolean hasNext() {
                 return current != null;
@@ -150,6 +203,10 @@ public class LinkList<T> implements Iterable<T> {
      */
     public boolean isEmpty() {
         return head == null;
+    }
+
+    public int size() {
+        return size;
     }
 
     public LinkList() {
