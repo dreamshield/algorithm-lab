@@ -16,6 +16,31 @@ public class LinkList<T> implements Iterable<T> {
     private int size = 0;
 
     /**
+     * 链表反转-遍历法
+     * 基本思想：从链表头开始依次遍历链表各个节点，并改变每个节点next域指针的指向，
+     * 即指向当前节点的直接前驱
+     */
+    public void reverseByLoop() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Link list is empty");
+        }
+        // 当前节点的直接前驱
+        Node<T> prev = head;
+        // 当前节点
+        Node<T> cur = head.next;
+        // 保存当前节点的直接后继
+        Node<T> temp;
+        while (cur != null) {
+            temp = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = temp;
+        }
+        head.next = null;
+        head = prev;
+    }
+
+    /**
      * 查找指定key对应的索引，找到返回对应的索引，未找到抛出异常
      * @param key 指定的key
      * @return 索引

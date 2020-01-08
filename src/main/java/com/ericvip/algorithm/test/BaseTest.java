@@ -3,6 +3,7 @@ package com.ericvip.algorithm.test;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdRandom;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -13,20 +14,15 @@ import java.util.*;
 public class BaseTest {
 
     public static void main(String[] args) {
-        Map<String, String> m = new HashMap<>();
-        int N = 50;
-        double[] a = new double[N];
-        for (int i = 0; i < N; i++) {
-            a[i] = StdRandom.random();
-        }
-        Arrays.sort(a);
-        for (int i = 0; i < N; i++) {
-            double x = 1.0 * i/N;
-            double y = a[i] / 2.0;
-            double rw = 0.5/N;
-            double rh = a[i] / 2.0;
-            StdDraw.filledRectangle(x, y, rw, rh);
-        }
+            SimpleDateFormat
+                    dfDateOnly = new SimpleDateFormat("yyyy/MM/dd"),
+                    dfYearWeek = new SimpleDateFormat("YYYY/ww");
+
+            Calendar c = Calendar.getInstance();
+            c.set(2015, 11, 31);
+
+            System.out.println("Date: " + dfDateOnly.format(c.getTime()));
+            System.out.println("Week: " + dfYearWeek.format(c.getTime()));
     }
 
     public static <T extends Comparable<T>> T min(T[] a) {

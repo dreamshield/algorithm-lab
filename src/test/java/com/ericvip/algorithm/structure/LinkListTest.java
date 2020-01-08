@@ -1,6 +1,7 @@
 package com.ericvip.algorithm.structure;
 
 import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -124,6 +125,18 @@ public class LinkListTest {
                 continue;
             }
             assertEquals(data, linkList.getDataByIndex(linkList.size() - 1 - index));
+            index++;
+        }
+    }
+
+    @Test
+    public void testReverseByLoop() {
+        LinkList<String> linkList = genTestData();
+        assertFalse(linkList.isEmpty());
+        linkList.reverseByLoop();
+        int index = 0;
+        for (String data : linkList) {
+            assertEquals(TEST_DATA.get(index), data);
             index++;
         }
     }
