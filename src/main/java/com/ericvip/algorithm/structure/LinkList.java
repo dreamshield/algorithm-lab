@@ -16,6 +16,24 @@ public class LinkList<T> implements Iterable<T> {
     private int size = 0;
 
     /**
+     * 链表反转-递归法
+     * 基本思想：从头结点找到尾节点，然后从尾节点往回走，
+     * 再将当节点的下一个节点的直接后继设置为当前节点。
+     * 注：该方法仅用于记录算法思路，不作为实际应用
+     * @param head 当前头结点
+     * @return 反转后的头结点
+     */
+    public static <E> Node<E> reverseByRecursion(Node<E> head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        Node<E> current = reverseByRecursion(head.next);
+        head.next.next = head;
+        head.next = null;
+        return current;
+    }
+
+    /**
      * 链表反转-遍历法
      * 基本思想：从链表头开始依次遍历链表各个节点，并改变每个节点next域指针的指向，
      * 即指向当前节点的直接前驱
