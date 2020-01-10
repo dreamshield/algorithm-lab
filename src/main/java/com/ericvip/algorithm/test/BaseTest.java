@@ -14,15 +14,15 @@ import java.util.*;
 public class BaseTest {
 
     public static void main(String[] args) {
-            SimpleDateFormat
-                    dfDateOnly = new SimpleDateFormat("yyyy/MM/dd"),
-                    dfYearWeek = new SimpleDateFormat("YYYY/ww");
+        SimpleDateFormat
+                dfDateOnly = new SimpleDateFormat("yyyy/MM/dd"),
+                dfYearWeek = new SimpleDateFormat("YYYY/ww");
 
-            Calendar c = Calendar.getInstance();
-            c.set(2015, 11, 31);
+        Calendar c = Calendar.getInstance();
+        c.set(2015, 11, 31);
 
-            System.out.println("Date: " + dfDateOnly.format(c.getTime()));
-            System.out.println("Week: " + dfYearWeek.format(c.getTime()));
+        System.out.println("Date: " + dfDateOnly.format(c.getTime()));
+        System.out.println("Week: " + dfYearWeek.format(c.getTime()));
     }
 
     public static <T extends Comparable<T>> T min(T[] a) {

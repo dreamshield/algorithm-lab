@@ -1,7 +1,9 @@
 package com.ericvip.algorithm.structure;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -139,5 +141,43 @@ public class LinkListTest {
             assertEquals(TEST_DATA.get(index), data);
             index++;
         }
+    }
+
+    @Test
+    public void testGetMidValueBySize() {
+        LinkList<String> linkList = new LinkList<>();
+        String midData;
+        List<String> testData = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            String data = RandomStringUtils.randomAlphabetic(1).toUpperCase();
+            testData.add(data);
+            linkList.insertTail(data);
+        }
+        midData = testData.get(testData.size() / 2);
+        assertEquals(midData, linkList.getMidValueBySize());
+        String additionalData = "Z";
+        testData.add(additionalData);
+        linkList.insertTail(additionalData);
+        midData = testData.get(testData.size() / 2);
+        assertEquals(midData, linkList.getMidValueBySize());
+    }
+
+    @Test
+    public void testGetMidValueByScaleplate() {
+        LinkList<String> linkList = new LinkList<>();
+        String midData;
+        List<String> testData = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            String data = RandomStringUtils.randomAlphabetic(1).toUpperCase();
+            testData.add(data);
+            linkList.insertTail(data);
+        }
+        midData = testData.get(testData.size() / 2 - 1);
+        assertEquals(midData, linkList.getMidValueByScaleplate());
+        String additionalData = "Z";
+        testData.add(additionalData);
+        linkList.insertTail(additionalData);
+        midData = testData.get(testData.size() / 2);
+        assertEquals(midData, linkList.getMidValueByScaleplate());
     }
 }

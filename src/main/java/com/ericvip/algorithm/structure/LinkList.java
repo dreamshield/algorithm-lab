@@ -16,10 +16,49 @@ public class LinkList<T> implements Iterable<T> {
     private int size = 0;
 
     /**
+     * 该方法通过记录的链表size值，直接计算得到中间节点
+     * 注：当链表有偶数个节点时，中间节点为中间两个节点的后一个节点
+     *
+     * @return
+     */
+    public T getMidValueBySize() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Link list is empty");
+        }
+        return getDataByIndex(size() / 2);
+    }
+
+    /**
+     * 查找单链表的中间节点-快慢指针法(标尺法)
+     * 定义两个指针变量，快指针一次移动两个节点，慢指针一次移动1个节点，当快指针到达链表尾部时，
+     * 慢指针所在的位置就是链表的中间节点
+     * 注：当链表有偶数个节点时，中间节点为中间两个节点的前一个节点
+     *
+     * @return 中间节点对应的数据
+     */
+    public T getMidValueByScaleplate() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Link list is empty");
+        }
+        Node<T> search = head;
+        Node<T> mid = head;
+        while (search.next != null) {
+            if (search.next.next != null) {
+                search = search.next.next;
+                mid = mid.next;
+            } else {
+                search = search.next;
+            }
+        }
+        return mid.data;
+    }
+
+    /**
      * 链表反转-递归法
      * 基本思想：从头结点找到尾节点，然后从尾节点往回走，
      * 再将当节点的下一个节点的直接后继设置为当前节点。
      * 注：该方法仅用于记录算法思路，不作为实际应用
+     *
      * @param head 当前头结点
      * @return 反转后的头结点
      */
@@ -60,6 +99,7 @@ public class LinkList<T> implements Iterable<T> {
 
     /**
      * 查找指定key对应的索引，找到返回对应的索引，未找到抛出异常
+     *
      * @param key 指定的key
      * @return 索引
      */
@@ -92,11 +132,17 @@ public class LinkList<T> implements Iterable<T> {
         Node<T> current = head;
         int index = 0;
         while (current != null) {
-            if (findIndex == index) {
+            // 距离需要的索引位置较远时，一次移动两个节点，加快移动速度
+            // 当快要接近索引位置时，一次移动一个节点
+            if (index < findIndex - 2) {
+                current = current.next.next;
+                index += 2;
+            } else if (findIndex == index) {
                 return current.data;
+            } else {
+                current = current.next;
+                index++;
             }
-            current = current.next;
-            index++;
         }
         return null;
     }
