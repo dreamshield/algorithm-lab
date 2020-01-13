@@ -180,4 +180,31 @@ public class LinkListTest {
         midData = testData.get(testData.size() / 2);
         assertEquals(midData, linkList.getMidValueByScaleplate());
     }
+
+    @Test
+    public void testHasCycle() {
+        // 无环测试
+        LinkList<String> linkListNoCycle = genTestData();
+        assertFalse(linkListNoCycle.isEmpty());
+        assertFalse(linkListNoCycle.hasCycle());
+        // 有环
+        LinkList<String> linkListHasCycle = genTestData();
+        LinkList.Node<String> head = linkListHasCycle.getHeadNode();
+        LinkList.Node<String> tail = linkListHasCycle.getTailNode();
+        tail.setNext(head.getNext().getNext());
+        assertTrue(linkListHasCycle.hasCycle());
+    }
+
+    @Test
+    public void testGetTailNode() {
+        // 空链表
+        LinkList<String> linkList = new LinkList<>();
+        assertNull(linkList.getTailNode());
+        // 非空
+        linkList.insertTail("A");
+        linkList.insertTail("B");
+        LinkList.Node<String> tail = linkList.getTailNode();
+        assertNotNull(tail);
+        assertEquals("B", tail.getData());
+    }
 }

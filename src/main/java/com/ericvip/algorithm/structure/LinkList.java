@@ -16,6 +16,30 @@ public class LinkList<T> implements Iterable<T> {
     private int size = 0;
 
     /**
+     * 判断链表是否有环
+     * 基本思路：采用快慢指针，快指针一次走两步，慢指针一次走一步，
+     * 当两个指针相遇时，则表示链表存在环；否则不存在
+     * @return 有：true；无：fasle
+     */
+    public boolean hasCycle() {
+        if (isEmpty()) {
+            throw new NoSuchElementException("Link list is empty");
+        }
+        Node<T> walker = head;
+        Node<T> runner = head;
+        while (runner.next != null) {
+            walker = walker.next;
+            if (runner.next.next != null) {
+                runner = runner.next.next;
+            }
+            if (walker.equals(runner)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 该方法通过记录的链表size值，直接计算得到中间节点
      * 注：当链表有偶数个节点时，中间节点为中间两个节点的后一个节点
      *
@@ -40,17 +64,17 @@ public class LinkList<T> implements Iterable<T> {
         if (isEmpty()) {
             throw new NoSuchElementException("Link list is empty");
         }
-        Node<T> search = head;
-        Node<T> mid = head;
-        while (search.next != null) {
-            if (search.next.next != null) {
-                search = search.next.next;
-                mid = mid.next;
+        Node<T> runner = head;
+        Node<T> walker = head;
+        while (runner.next != null) {
+            if (runner.next.next != null) {
+                runner = runner.next.next;
+                walker = walker.next;
             } else {
-                search = search.next;
+                runner = runner.next;
             }
         }
-        return mid.data;
+        return walker.data;
     }
 
     /**
@@ -263,6 +287,31 @@ public class LinkList<T> implements Iterable<T> {
         return temp.data;
     }
 
+    /**
+     * 获取尾结点
+     *
+     * @return 尾结点
+     */
+    public Node<T> getTailNode() {
+        if (isEmpty()) {
+            return null;
+        }
+        Node<T> current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+        return current;
+    }
+
+    /**
+     * 获取头结点
+     *
+     * @return 头结点
+     */
+    public Node<T> getHeadNode() {
+        return head;
+    }
+
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
@@ -306,7 +355,7 @@ public class LinkList<T> implements Iterable<T> {
         this.head = head;
     }
 
-    private static class Node<E> {
+    static class Node<E> {
         private E data;
         private Node<E> next;
 
@@ -316,6 +365,22 @@ public class LinkList<T> implements Iterable<T> {
 
         public Node(E data, Node<E> next) {
             this.data = data;
+            this.next = next;
+        }
+
+        public E getData() {
+            return data;
+        }
+
+        public void setData(E data) {
+            this.data = data;
+        }
+
+        public Node<E> getNext() {
+            return next;
+        }
+
+        public void setNext(Node<E> next) {
             this.next = next;
         }
     }
