@@ -193,6 +193,15 @@ public class LinkListTest {
         LinkList.Node<String> tail = linkListHasCycle.getTailNode();
         tail.setNext(head.getNext().getNext());
         assertTrue(linkListHasCycle.hasCycle());
+        // 仅有头结点
+        LinkList<String> linkListOnlyHead = new LinkList<>();
+        linkListOnlyHead.insertHead("A");
+        assertFalse(linkListOnlyHead.isEmpty());
+        assertFalse(linkListOnlyHead.hasCycle());
+        // 仅有头结点且成环
+        head = linkListOnlyHead.getHeadNode();
+        head.setNext(head);
+        assertTrue(linkListOnlyHead.hasCycle());
     }
 
     @Test
@@ -206,5 +215,79 @@ public class LinkListTest {
         LinkList.Node<String> tail = linkList.getTailNode();
         assertNotNull(tail);
         assertEquals("B", tail.getData());
+    }
+
+    @Test
+    public void testFindCycleStartPoint() {
+        // 无环测试
+        LinkList<String> linkListNoCycle = genTestData();
+        assertFalse(linkListNoCycle.isEmpty());
+        assertFalse(linkListNoCycle.hasCycle());
+        assertNull(linkListNoCycle.getCycleStartPoint());
+        // 有环
+        LinkList<String> linkListHasCycle = genTestData();
+        LinkList.Node<String> head = linkListHasCycle.getHeadNode();
+        LinkList.Node<String> tail = linkListHasCycle.getTailNode();
+        tail.setNext(head.getNext().getNext());
+        assertTrue(linkListHasCycle.hasCycle());
+        assertEquals(head.getNext().getNext(), linkListHasCycle.getCycleStartPoint());
+        // 仅有头结点
+        LinkList<String> linkListOnlyHead = new LinkList<>();
+        linkListOnlyHead.insertHead("A");
+        assertFalse(linkListOnlyHead.hasCycle());
+        // 仅有头结点且成环
+        head = linkListOnlyHead.getHeadNode();
+        head.setNext(head);
+        assertTrue(linkListOnlyHead.hasCycle());
+        assertEquals(head, linkListOnlyHead.getCycleStartPoint());
+    }
+
+    @Test
+    public void testGetLinkListCycleLength() {
+        // 无环测试
+        LinkList<String> linkListNoCycle = genTestData();
+        assertFalse(linkListNoCycle.isEmpty());
+        assertFalse(linkListNoCycle.hasCycle());
+        assertEquals(0, linkListNoCycle.getLinkListCycleLength());
+        // 有环
+        LinkList<String> linkListHasCycle = genTestData();
+        LinkList.Node<String> head = linkListHasCycle.getHeadNode();
+        LinkList.Node<String> tail = linkListHasCycle.getTailNode();
+        tail.setNext(head.getNext().getNext());
+        assertTrue(linkListHasCycle.hasCycle());
+        assertEquals(linkListHasCycle.size() - 2, linkListHasCycle.getLinkListCycleLength());
+        // 仅有头结点
+        LinkList<String> linkListOnlyHead = new LinkList<>();
+        linkListOnlyHead.insertHead("A");
+        assertFalse(linkListOnlyHead.hasCycle());
+        assertEquals(0, linkListOnlyHead.getLinkListCycleLength());
+        // 仅有头结点且成环
+        head = linkListOnlyHead.getHeadNode();
+        head.setNext(head);
+        assertTrue(linkListOnlyHead.hasCycle());
+        assertEquals(1, linkListOnlyHead.getLinkListCycleLength());
+    }
+
+    @Test
+    public void testHasCycleReturnByNode() {
+        // 无环测试
+        LinkList<String> linkListNoCycle = genTestData();
+        assertFalse(linkListNoCycle.isEmpty());
+        assertNull(linkListNoCycle.hasCycleReturnByNode());
+        // 有环
+        LinkList<String> linkListHasCycle = genTestData();
+        LinkList.Node<String> head = linkListHasCycle.getHeadNode();
+        LinkList.Node<String> tail = linkListHasCycle.getTailNode();
+        tail.setNext(head.getNext().getNext());
+        assertNotNull(linkListHasCycle.hasCycleReturnByNode());
+        // 仅有头结点
+        LinkList<String> linkListOnlyHead = new LinkList<>();
+        linkListOnlyHead.insertHead("A");
+        assertFalse(linkListOnlyHead.isEmpty());
+        assertNull(linkListOnlyHead.hasCycleReturnByNode());
+        // 仅有头结点且成环
+        head = linkListOnlyHead.getHeadNode();
+        head.setNext(head);
+        assertNotNull(linkListOnlyHead.hasCycleReturnByNode());
     }
 }

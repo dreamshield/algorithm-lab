@@ -12,18 +12,59 @@ import java.util.NoSuchElementException;
  */
 public class LinkList<T> implements Iterable<T> {
 
+    private static final String LINK_LIST_IS_EMPTY = "Link list is empty";
     private Node<T> head;
     private int size = 0;
+
+    /**
+     * 获取有环链表中环的起始节点
+     * 思路：1. 判断链表是否有环；2.根据"Floyd cycle detection algorithm"原理，
+     * 获取环的起始节点
+     * @return 无环：null；有环：Node<T> 环的入口节点
+     */
+    public Node<T> getCycleStartPoint() {
+        Node<T> node = hasCycleReturnByNode();
+        if (node == null) {
+            return null;
+        }
+        Node<T> probNode = head;
+        while (!probNode.equals(node)) {
+            probNode = probNode.next;
+            node = node.next;
+        }
+        return probNode;
+    }
+
+    /**
+     * 返回有环链表中环的长度
+     * 思路：1.判断链表是否有环；2.有环的情况下根据步骤1返回环中任意节点，遍历环一周，
+     * 得到环的长度
+     * @return 如果链表无环返回0；有环返回对应的长度
+     */
+    public int getLinkListCycleLength() {
+        Node<T> node = hasCycleReturnByNode();
+        if (node == null) {
+            return 0;
+        }
+        Node<T> current = node;
+        int len = 1;
+        while (!current.next.equals(node)) {
+            current = current.next;
+            len++;
+        }
+        return len;
+    }
 
     /**
      * 判断链表是否有环
      * 基本思路：采用快慢指针，快指针一次走两步，慢指针一次走一步，
      * 当两个指针相遇时，则表示链表存在环；否则不存在
-     * @return 有：true；无：fasle
+     * 算法原理："Floyd cycle detection algorithm"
+     * @return 有：true；无：false；链表为空返回false
      */
     public boolean hasCycle() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Link list is empty");
+            return false;
         }
         Node<T> walker = head;
         Node<T> runner = head;
@@ -40,14 +81,39 @@ public class LinkList<T> implements Iterable<T> {
     }
 
     /**
+     * 判断链表是否有环
+     * 基本思想：采用快慢指针，快指针一次走两步，慢指针一次走一步，
+     * 当两个指针相遇时，则表示链表存在环；否则不存在
+     * 算法原理："Floyd cycle detection algorithm"
+     * @return 当链表有环时返回环内任意一个节点；当链表无环时返回null;
+     */
+    public Node<T> hasCycleReturnByNode() {
+        if (isEmpty()) {
+            return null;
+        }
+        Node<T> walker = head;
+        Node<T> runner = head;
+        while (runner.next != null) {
+            walker = walker.next;
+            if (runner.next.next != null) {
+                runner = runner.next.next;
+            }
+            if (walker.equals(runner)) {
+                return walker;
+            }
+        }
+        return null;
+    }
+
+    /**
      * 该方法通过记录的链表size值，直接计算得到中间节点
      * 注：当链表有偶数个节点时，中间节点为中间两个节点的后一个节点
      *
-     * @return
+     * @return 链表为空：返回null；非空返回对应的中间节点
      */
     public T getMidValueBySize() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Link list is empty");
+            return null;
         }
         return getDataByIndex(size() / 2);
     }
@@ -58,11 +124,11 @@ public class LinkList<T> implements Iterable<T> {
      * 慢指针所在的位置就是链表的中间节点
      * 注：当链表有偶数个节点时，中间节点为中间两个节点的前一个节点
      *
-     * @return 中间节点对应的数据
+     * @return 链表为空：返回null；链表非空：中间节点对应的数据
      */
     public T getMidValueByScaleplate() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Link list is empty");
+            return null;
         }
         Node<T> runner = head;
         Node<T> walker = head;
@@ -103,7 +169,7 @@ public class LinkList<T> implements Iterable<T> {
      */
     public void reverseByLoop() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Link list is empty");
+            throw new NoSuchElementException(LINK_LIST_IS_EMPTY);
         }
         // 当前节点的直接前驱
         Node<T> prev = head;
@@ -129,7 +195,7 @@ public class LinkList<T> implements Iterable<T> {
      */
     public int getIndexByKey(T key) {
         if (isEmpty()) {
-            throw new NoSuchElementException("LinkList is empty");
+            throw new NoSuchElementException(LINK_LIST_IS_EMPTY);
         }
         int index = 0;
         Node<T> current = head;
@@ -202,7 +268,7 @@ public class LinkList<T> implements Iterable<T> {
      */
     public boolean deleteByKey(T key) {
         if (isEmpty()) {
-            throw new NoSuchElementException("LinkList is empty");
+            throw new NoSuchElementException(LINK_LIST_IS_EMPTY);
         }
         Node<T> current = head;
         Node<T> previous = head;
@@ -279,7 +345,7 @@ public class LinkList<T> implements Iterable<T> {
      */
     public T deleteHead() {
         if (isEmpty()) {
-            throw new NoSuchElementException("LinkList is empty");
+            throw new NoSuchElementException(LINK_LIST_IS_EMPTY);
         }
         Node<T> temp = head;
         head = head.next;
