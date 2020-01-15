@@ -9,6 +9,7 @@ import java.util.NoSuchElementException;
  * @time 7:47 AM
  */
 public class Stack<E> implements Iterable<E> {
+    private static final String STACK_UNDERFLOW = "Stack underflow";
     private Node<E> head;
     private int depth;
 
@@ -18,16 +19,15 @@ public class Stack<E> implements Iterable<E> {
     }
 
     public void push(E item) {
-        Node<E> oldHead = head;
-        head = new Node<>();
-        head.item = item;
-        head.next = oldHead;
+        Node<E> newNode = new Node<>(item);
+        newNode.next = head;
+        head = newNode;
         depth++;
     }
 
     public E pop() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Stack underflow");
+            throw new NoSuchElementException(STACK_UNDERFLOW);
         }
         E item = head.item;
         head = head.next;
@@ -45,7 +45,7 @@ public class Stack<E> implements Iterable<E> {
 
     public E peek() {
         if (isEmpty()) {
-            throw new NoSuchElementException("Stack underflow");
+            throw new NoSuchElementException(STACK_UNDERFLOW);
         }
         return head.item;
     }
@@ -63,6 +63,10 @@ public class Stack<E> implements Iterable<E> {
     private static class Node<T> {
         private T item;
         private Node<T> next;
+
+        public Node(T item) {
+            this.item = item;
+        }
     }
 
     @Override
@@ -85,7 +89,7 @@ public class Stack<E> implements Iterable<E> {
         @Override
         public T next() {
             if (!hasNext()) {
-                throw new NoSuchElementException("Stack underflow");
+                throw new NoSuchElementException(STACK_UNDERFLOW);
             }
             T item = current.item;
             current = current.next;

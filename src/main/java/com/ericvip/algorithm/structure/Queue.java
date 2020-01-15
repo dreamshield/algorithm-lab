@@ -54,7 +54,7 @@ public class Queue<E> implements Iterable<E> {
         head = head.next;
         len--;
         if (isEmpty()) {
-            tail = null;
+            tail = head;
         }
         return item;
     }
