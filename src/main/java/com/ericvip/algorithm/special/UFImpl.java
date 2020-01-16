@@ -58,6 +58,9 @@ public class UFImpl implements IUF {
     @Override
     public int find(int p) {
         validate(p);
+        // 由于 p!=id[p]，所以id[id[p]]一定是一个更靠近根节点的一个值
+        // 那么让id[p]=id[id[p]]，就是id[p]的值更接近跟节点，从而减小了树的高度，
+        // 使树变得更扁平了
         while (p != id[p]) {
             // 查找跳跃一个
             id[p] = id[id[p]];
