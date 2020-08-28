@@ -18,7 +18,7 @@ public interface IUF {
     void union(int p, int q);
 
     /**
-     * 获取p所在分量的标识符
+     * 获取p所在分量的分量值
      *
      * @param p the p
      * @return int

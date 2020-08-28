@@ -23,6 +23,7 @@ public class BaseTest {
 
         System.out.println("Date: " + dfDateOnly.format(c.getTime()));
         System.out.println("Week: " + dfYearWeek.format(c.getTime()));
+        int t = Integer.parseInt("12");
     }
 
     public static <T extends Comparable<T>> T min(T[] a) {
