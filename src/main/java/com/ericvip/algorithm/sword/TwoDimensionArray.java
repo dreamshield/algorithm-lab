@@ -53,10 +53,4 @@ public class TwoDimensionArray {
         }
         return false;
     }
-
-    public static void main(String[] args) {
-        int[][] t = {null};
-
-        System.out.println("t=" + t.length);
-    }
 }

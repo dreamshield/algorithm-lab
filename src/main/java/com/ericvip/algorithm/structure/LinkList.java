@@ -126,7 +126,7 @@ public class LinkList<T> implements Iterable<T> {
      *
      * @return 链表为空：返回null；链表非空：中间节点对应的数据
      */
-    public T getMidValueByScaleplate() {
+    public T getMidValueByScale() {
         if (isEmpty()) {
             return null;
         }
@@ -378,6 +378,36 @@ public class LinkList<T> implements Iterable<T> {
         return head;
     }
 
+    /**
+     * 从尾到头遍历链表：栈遍历法
+     */
+    public void iteratorFromTailToHeadByStack() {
+        if (size() == 0) {
+            return;
+        }
+        Stack<T> stack = new Stack<>();
+        Node<T> current = head;
+        while(current != null) {
+            stack.push(current.getData());
+            current = current.next;
+        }
+        while (!stack.isEmpty()) {
+            System.out.println("Data=" + stack.pop());
+        }
+    }
+
+    /**
+     * 从尾到头打印链表: 递归法
+     */
+    public void iteratorFromTailToHeadByRecursive() {
+        if (head != null) {
+            if (head.next != null) {
+                iteratorFromTailToHeadByRecursive();
+            }
+            System.out.println("Data=" + head.getData());
+        }
+    }
+
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
@@ -427,11 +457,6 @@ public class LinkList<T> implements Iterable<T> {
 
         public Node(E data) {
             this.data = data;
-        }
-
-        public Node(E data, Node<E> next) {
-            this.data = data;
-            this.next = next;
         }
 
         public E getData() {

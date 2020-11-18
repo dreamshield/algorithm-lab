@@ -173,12 +173,12 @@ public class LinkListTest {
             linkList.insertTail(data);
         }
         midData = testData.get(testData.size() / 2 - 1);
-        assertEquals(midData, linkList.getMidValueByScaleplate());
+        assertEquals(midData, linkList.getMidValueByScale());
         String additionalData = "Z";
         testData.add(additionalData);
         linkList.insertTail(additionalData);
         midData = testData.get(testData.size() / 2);
-        assertEquals(midData, linkList.getMidValueByScaleplate());
+        assertEquals(midData, linkList.getMidValueByScale());
     }
 
     @Test
