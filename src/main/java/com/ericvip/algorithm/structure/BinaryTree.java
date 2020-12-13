@@ -6,6 +6,7 @@ package com.ericvip.algorithm.structure;
  * 节点高度：对于任意节点n,n的高度为从n到一片树叶的最长路径长，所有树叶的高度为0。
  * 树的深度=树的高度(每个的定义不同，可能出现大小为1的差值)。
  * 树的深度(深度比高度更能提现一棵向下生长的二叉树)：树中所有节点的最大深度，称为树的深度。特别的根节点的深度为0。
+ * 注：深度为从根节点向下生长；高度为从叶子节点向上生长；并且根节点的深度为0，叶子节点的高度为0。
  * 度：树中任意节点的子树数目，称为该节点的度。
  * 树的度：一棵树中子树度的最大值。
  * 路径：由树中k+1节点通过树边首尾衔接而构成的序列{(v0, v1),(v1, v2), …, (vk-1 , vk) | k ≥ 0}，称作树中长度为k的一条路径(Path)。
@@ -96,21 +97,26 @@ public interface BinaryTree<K extends Comparable<? super K>, V> {
 
     /**
      * 前序遍历
-     * 注：自身节点 -> 左子树 -> 右子树
+     * 性质：[根节点 -> 左子树 -> 右子树]
      */
-    void preOrderTraverse();
+    void preorderTraverse();
 
     /**
      * 中序遍历
-     * 注：左子树 -> 自身节点 -> 右子树
+     * 性质：[左子树 -> 根节点 -> 右子树]
      */
-    void inOrderTraverse();
+    void inorderTraverse();
 
     /**
      * 后序遍历
-     * 注：左子树 -> 右子树 -> 自身节点
+     * 性质：[左子树 -> 右子树 -> 根节点]
      */
-    void postOrderTraverse();
+    void postorderTraverse();
+
+    /**
+     * 层序遍历
+     */
+    void levelOrderTraverse();
 
     /**
      * 判断树是否为空
@@ -124,11 +130,6 @@ public interface BinaryTree<K extends Comparable<? super K>, V> {
      * 表中键值对的数量
      */
     int size();
-
-    /**
-     * 数的高度
-     */
-    int height();
 
     /**
      * 将键值对存入二叉树中
@@ -221,6 +222,7 @@ public interface BinaryTree<K extends Comparable<? super K>, V> {
 
     /**
      * 小于等于key的键的数量
+     * 注：指定键的排名
      *
      * @param key 指定的key
      * @return 键的数量
@@ -228,11 +230,36 @@ public interface BinaryTree<K extends Comparable<? super K>, V> {
     int rank(K key);
 
     /**
-     * 排名为r的键
+     * 排名为k的键
+     * 注：排名为k，表示有k个小于它的键
      *
-     * @param r 指定的排名
+     * @param r 排名
      * @return 对应的键
      */
     K select(int r);
+
+    /**
+     * 删除最小值
+     */
+    void deleteMin();
+
+    /**
+     * 删除最大值
+     */
+    void deleteMax();
+
+    /**
+     * 计算二叉树的高度
+     *
+     * @return 数的高度
+     */
+    int maxHeight();
+
+    /**
+     * 删除指定键对应的节点
+     *
+     * @param key 指定的键
+     */
+    void deleteKey(K key);
 
 }

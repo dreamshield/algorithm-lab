@@ -29,7 +29,7 @@ public class BST<K extends Comparable<? super K>, V> implements BinaryTree<K, V>
     }
 
     @Override
-    public void preOrderTraverse() {
+    public void preorderTraverse() {
         preOrderTraverse(root);
     }
 
@@ -57,7 +57,7 @@ public class BST<K extends Comparable<? super K>, V> implements BinaryTree<K, V>
     }
 
     @Override
-    public void inOrderTraverse() {
+    public void inorderTraverse() {
         inOrderTraverse(root);
     }
 
@@ -88,7 +88,7 @@ public class BST<K extends Comparable<? super K>, V> implements BinaryTree<K, V>
     }
 
     @Override
-    public void postOrderTraverse() {
+    public void postorderTraverse() {
         postOrderTraverse(root);
     }
 
@@ -126,6 +126,10 @@ public class BST<K extends Comparable<? super K>, V> implements BinaryTree<K, V>
         }
     }
 
+    @Override
+    public void levelOrderTraverse() {
+
+    }
 
     private void doSomething(Consumer<V> c, V value) {
         c.accept(value);
@@ -142,11 +146,6 @@ public class BST<K extends Comparable<? super K>, V> implements BinaryTree<K, V>
             return 0;
         }
         return node.getN();
-    }
-
-    @Override
-    public int height() {
-        return 0;
     }
 
     @Override
@@ -240,6 +239,18 @@ public class BST<K extends Comparable<? super K>, V> implements BinaryTree<K, V>
 
     @Override
     public boolean contains(K key) {
+        Node<K, V> node = root;
+        int cmp;
+        while (node != null) {
+            cmp = node.getKey().compareTo(key);
+            if (cmp == 0) {
+                return true;
+            } else if (cmp > 0) {
+                node = node.getLeft();
+            } else {
+                node = node.getRight();
+            }
+        }
         return false;
     }
 
@@ -375,11 +386,139 @@ public class BST<K extends Comparable<? super K>, V> implements BinaryTree<K, V>
 
     @Override
     public int rank(K key) {
-        return 0;
+        return rank(root, key);
+    }
+
+    private int rank(Node<K, V> node, K key) {
+        if (node == null) {
+            return 0;
+        }
+        int cmp = node.getKey().compareTo(key);
+        if (cmp < 0) {
+            return rank(node.getLeft(), key);
+        } else if (cmp > 0) {
+            return 1 + size(node.getLeft()) + rank(node.getRight(), key);
+        } else {
+            return size(node.getLeft());
+        }
     }
 
     @Override
     public K select(int r) {
+        Node<K, V> node = select(root, r);
+        return node == null ? null : node.getKey();
+    }
+
+    private Node<K, V> select(Node<K, V> root, int r) {
+        Node<K, V> node = root;
+        int t;
+        int tmp = r;
+        while (node != null) {
+            t = size(node.getLeft());
+            if (t < tmp) {
+                node = node.getLeft();
+            } else if (t > tmp) {
+                node = node.getRight();
+                tmp -= t - 1;
+            } else {
+                return node;
+            }
+        }
         return null;
     }
+
+    @Override
+    public int maxHeight() {
+        return 0;
+    }
+
+    @Override
+    public void deleteMin() {
+        root = deleteMin(root);
+    }
+
+    /**
+     * 删除指定子树的最小值
+     *
+     * @param node 子树的根节点
+     * @return 新子树的根节点
+     */
+    Node<K, V> deleteMin(Node<K, V> node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.getLeft() == null) {
+            return node.getRight();
+        }
+        node.setLeft(deleteMin(node.getLeft()));
+        node.setN(1 + size(node.getLeft()) + size(node.getRight()));
+        return node;
+    }
+
+    @Override
+    public void deleteMax() {
+        root = deleteMax(root);
+    }
+
+    /**
+     * 删除指定子树的最大值
+     *
+     * @param node 指定子树的根节点
+     * @return 新子树的根节点
+     */
+    Node<K, V> deleteMax(Node<K, V> node) {
+        if (node == null) {
+            return null;
+        }
+        if (node.getRight() == null) {
+            return node.getLeft();
+        }
+        node.setRight(deleteMax(node.getRight()));
+        node.setN(1 + size(node.getLeft()) + size(node.getRight()));
+        return node;
+    }
+
+    @Override
+    public void deleteKey(K key) {
+        root = deleteKey(root, key);
+    }
+
+    /**
+     * 删除指定子树中指定的键
+     *
+     * @param node 指定子树跟节点
+     * @param key  指定删除的key
+     * @return 新的子树的根
+     */
+    Node<K, V> deleteKey(Node<K, V> node, K key) {
+        Node<K, V> curNode = node;
+        if (curNode == null) {
+            return null;
+        }
+        int cmp = curNode.getKey().compareTo(key);
+        if (cmp > 0) {
+            curNode.setLeft(deleteKey(curNode.getLeft(), key));
+        } else if (cmp < 0) {
+            curNode.setRight(deleteKey(curNode.getRight(), key));
+        } else {
+            if (curNode.getLeft() == null) {
+                return curNode.getRight();
+            }
+            if (curNode.getRight() == null) {
+                return curNode.getLeft();
+            }
+            // step1: 将当前被删除的节点临时存储
+            Node<K, V> t = curNode;
+            // step2: 找到被删除节点右子树的最小节点(该节点就是替换被删除节点对应位置的最新节点)
+            curNode = minNode(t.getRight());
+            // step3: 将最新节点的右链接指向被删除节点右子树删除最小节点后的根节点
+            curNode.setRight(deleteMin(t.getRight()));
+            // step4: 将最新节点的左链接指向被删除节点的左连接
+            curNode.setLeft(t.getLeft());
+        }
+        curNode.setN(1 + size(curNode.getLeft()) + size(curNode.getRight()));
+        return curNode;
+    }
+
+
 }
