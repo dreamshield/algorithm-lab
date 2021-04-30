@@ -20,6 +20,7 @@ public class LinkList<T> implements Iterable<T> {
      * 获取有环链表中环的起始节点
      * 思路：1. 判断链表是否有环；2.根据"Floyd cycle detection algorithm"原理，
      * 获取环的起始节点
+     *
      * @return 无环：null；有环：Node<T> 环的入口节点
      */
     public Node<T> getCycleStartPoint() {
@@ -39,6 +40,7 @@ public class LinkList<T> implements Iterable<T> {
      * 返回有环链表中环的长度
      * 思路：1.判断链表是否有环；2.有环的情况下根据步骤1返回环中任意节点，遍历环一周，
      * 得到环的长度
+     *
      * @return 如果链表无环返回0；有环返回对应的长度
      */
     public int getLinkListCycleLength() {
@@ -60,6 +62,7 @@ public class LinkList<T> implements Iterable<T> {
      * 基本思路：采用快慢指针，快指针一次走两步，慢指针一次走一步，
      * 当两个指针相遇时，则表示链表存在环；否则不存在
      * 算法原理："Floyd cycle detection algorithm"
+     *
      * @return 有：true；无：false；链表为空返回false
      */
     public boolean hasCycle() {
@@ -85,6 +88,7 @@ public class LinkList<T> implements Iterable<T> {
      * 基本思想：采用快慢指针，快指针一次走两步，慢指针一次走一步，
      * 当两个指针相遇时，则表示链表存在环；否则不存在
      * 算法原理："Floyd cycle detection algorithm"
+     *
      * @return 当链表有环时返回环内任意一个节点；当链表无环时返回null;
      */
     public Node<T> hasCycleReturnByNode() {
@@ -156,10 +160,51 @@ public class LinkList<T> implements Iterable<T> {
         if (head == null || head.next == null) {
             return head;
         }
-        Node<E> current = reverseByRecursion(head.next);
+        Node<E> last = reverseByRecursion(head.next);
         head.next.next = head;
         head.next = null;
-        return current;
+        return last;
+    }
+
+    /**
+     * 反转链表前N个节点
+     *
+     * @param head 链表头结点
+     * @return
+     */
+    private Node<T> successor;
+
+    public Node<T> reverseByRecursion(Node<T> head, int n) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        if (n == 1) {
+            successor = head.next;
+            return head;
+        }
+        Node<T> last = reverseByRecursion(head.next, n - 1);
+        head.next.next = head;
+        head.next = successor;
+        return last;
+    }
+
+    /**
+     * 反转链表m/n之间的节点
+     *
+     * @param head 链表头节点
+     * @param m    位置m
+     * @param n    未知n
+     * @return 头结点
+     */
+    public Node<T> reverseByRecursion(Node<T> head, int m, int n) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+        if (m == 1) {
+            return reverseByRecursion(head, n);
+        }
+        head.next = reverseByRecursion(head.next, m - 1, n - 1);
+        return head;
     }
 
     /**
@@ -186,6 +231,65 @@ public class LinkList<T> implements Iterable<T> {
         head.next = null;
         head = prev;
     }
+
+    /**
+     * 反转链表前N个节点
+     *
+     * @param head 当前链表头节点
+     * @param n    指定节点数
+     * @param <E>  泛型变量
+     * @return 新链表头结点
+     */
+    public static <E> Node<E> reverseByLoop(Node<E> head, int n) {
+        if (head == null || n == 1) {
+            return head;
+        }
+        // 当前节点直接前驱
+        Node<E> prev = head;
+        // 当前节点
+        Node<E> cur = head.next;
+        // 保存当前节点的直接后继
+        Node<E> temp = null;
+        while (cur != null && n > 1) {
+            temp = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = temp;
+            n--;
+        }
+        head.next = temp;
+        return prev;
+    }
+
+    public static <E> Node<E> reverseByLoop(Node<E> head, int left, int right) {
+        if (head == null) {
+            return head;
+        }
+
+        if (left >= right) {
+            throw new RuntimeException("参数配置错误");
+        }
+        Node<E> dummyNode = new Node<>();
+        dummyNode.next = head;
+        Node<E> prev = dummyNode;
+        // 找到待反转区的前一个节点
+        for (int i = 0; i < left - 1; i++) {
+            prev = prev.next;
+        }
+
+        // 头插法，前面节点后移，后面前插
+        Node<E> cur = prev.next;
+        Node<E> successor;
+        for (int i = 0; i < right - left; i++) {
+            successor = cur.next;
+            cur.next = successor.next;
+            successor.next = prev.next;
+            prev.next = successor;
+        }
+
+        return dummyNode.next;
+    }
+
 
     /**
      * 查找指定key对应的索引，找到返回对应的索引，未找到抛出异常
@@ -378,6 +482,10 @@ public class LinkList<T> implements Iterable<T> {
         return head;
     }
 
+    public void setHeadNode(Node<T> head) {
+        this.head = head;
+    }
+
     /**
      * 从尾到头遍历链表：栈遍历法
      */
@@ -387,7 +495,7 @@ public class LinkList<T> implements Iterable<T> {
         }
         Stack<T> stack = new Stack<>();
         Node<T> current = head;
-        while(current != null) {
+        while (current != null) {
             stack.push(current.getData());
             current = current.next;
         }
@@ -457,6 +565,10 @@ public class LinkList<T> implements Iterable<T> {
 
         public Node(E data) {
             this.data = data;
+        }
+
+        public Node() {
+
         }
 
         public E getData() {

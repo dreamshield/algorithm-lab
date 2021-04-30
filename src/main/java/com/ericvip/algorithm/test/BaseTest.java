@@ -1,11 +1,5 @@
 package com.ericvip.algorithm.test;
 
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdRandom;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 /**
  * @author EricZhang
  * @date 2019/10/25
@@ -13,32 +7,41 @@ import java.util.*;
  */
 public class BaseTest {
 
-    public static void main(String[] args) {
-        SimpleDateFormat
-                dfDateOnly = new SimpleDateFormat("yyyy/MM/dd"),
-                dfYearWeek = new SimpleDateFormat("YYYY/ww");
+    public static void quickSort(int[] arr, int lo, int hi) {
+        if (lo >= hi) {
+            return;
+        }
+        int j = partition(arr, lo, hi);
+        quickSort(arr, lo, j - 1);
+        quickSort(arr, j + 1, hi);
 
-        Calendar c = Calendar.getInstance();
-        c.set(2015, 11, 31);
-
-        System.out.println("Date: " + dfDateOnly.format(c.getTime()));
-        System.out.println("Week: " + dfYearWeek.format(c.getTime()));
-        String t = "We are happy";
-        t.replace("", "%");
-        int[] arr = new int[10];
     }
 
-    public static <T extends Comparable<T>> T min(T[] a) {
-        if (a == null || a.length == 0) {
-            return null;
-        }
-
-        T smallest = a[0];
-        for (T t : a) {
-            if (smallest.compareTo(t) > 0) {
-                smallest = t;
+    private static int partition(int[] arr, int lo, int hi) {
+        int i = lo;
+        int j = hi + 1;
+        int k = arr[lo];
+        int temp;
+        while (true) {
+            while(arr[++i] < k) {
+                if (i == hi) {
+                    break;
+                }
             }
+            while(arr[--j] > k) {
+                if (j == lo) {
+                    break;
+                }
+            }
+            if (i >= j) {
+                break;
+            }
+            temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
         }
-        return smallest;
+        arr[lo] = arr[j];
+        arr[j] = k;
+        return j;
     }
 }

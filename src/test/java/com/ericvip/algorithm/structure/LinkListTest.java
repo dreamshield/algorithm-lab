@@ -144,6 +144,79 @@ public class LinkListTest {
     }
 
     @Test
+    public void testReverseByRecursion() {
+        LinkList<String> linkList = genTestData();
+        assertFalse(linkList.isEmpty());
+        LinkList.Node<String> head = LinkList.reverseByRecursion(linkList.getHeadNode());
+        linkList.setHeadNode(head);
+        int index = 0;
+        for (String data : linkList) {
+            assertEquals(TEST_DATA.get(index), data);
+            index++;
+        }
+    }
+
+    @Test
+    public void testReverseByRecursionN() {
+        LinkList<String> linkList = genTestData();
+        assertFalse(linkList.isEmpty());
+        for (String data : linkList) {
+            System.out.println("v=" + data);
+        }
+        System.out.println("-------------------");
+        LinkList.Node<String> head = linkList.reverseByRecursion(linkList.getHeadNode(), 5);
+        linkList.setHeadNode(head);
+        for (String data : linkList) {
+            System.out.println("v=" + data);
+        }
+    }
+
+    @Test
+    public void testReverseByRecursionBetweenMN() {
+        LinkList<String> linkList = genTestData();
+        assertFalse(linkList.isEmpty());
+        for (String data : linkList) {
+            System.out.println("v=" + data);
+        }
+        System.out.println("-------------------");
+        LinkList.Node<String> head = linkList.reverseByRecursion(linkList.getHeadNode(), 2, 6);
+        linkList.setHeadNode(head);
+        for (String data : linkList) {
+            System.out.println("v=" + data);
+        }
+    }
+
+    @Test
+    public void testReverseByLoopN() {
+        LinkList<String> linkList = genTestData();
+        assertFalse(linkList.isEmpty());
+        for (String data : linkList) {
+            System.out.println("v=" + data);
+        }
+        System.out.println("-------------------");
+        LinkList.Node<String> head = LinkList.reverseByLoop(linkList.getHeadNode(), 5);
+        linkList.setHeadNode(head);
+        for (String data : linkList) {
+            System.out.println("v=" + data);
+        }
+    }
+
+    @Test
+    public void testReverseByLoopBetweenMN() {
+        LinkList<String> linkList = genTestData();
+        assertFalse(linkList.isEmpty());
+        for (String data : linkList) {
+            System.out.println("v=" + data);
+        }
+        System.out.println("-------------------");
+        LinkList.Node<String> head = LinkList.reverseByLoop(linkList.getHeadNode(), 2, 6);
+        linkList.setHeadNode(head);
+        for (String data : linkList) {
+            System.out.println("v=" + data);
+        }
+    }
+
+    @Test
     public void testGetMidValueBySize() {
         LinkList<String> linkList = new LinkList<>();
         String midData;
