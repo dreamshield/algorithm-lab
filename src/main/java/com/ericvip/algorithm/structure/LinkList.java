@@ -217,9 +217,9 @@ public class LinkList<T> implements Iterable<T> {
             throw new NoSuchElementException(LINK_LIST_IS_EMPTY);
         }
         // 当前节点的直接前驱
-        Node<T> prev = head;
+        Node<T> prev = null;
         // 当前节点
-        Node<T> cur = head.next;
+        Node<T> cur = head;
         // 保存当前节点的直接后继
         Node<T> temp;
         while (cur != null) {
@@ -228,7 +228,6 @@ public class LinkList<T> implements Iterable<T> {
             prev = cur;
             cur = temp;
         }
-        head.next = null;
         head = prev;
     }
 
